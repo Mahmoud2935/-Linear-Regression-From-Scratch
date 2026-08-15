@@ -137,3 +137,4 @@ for true, pred in zip(y_test[:10],predictions[:10]):
     print( f"True: {true} | Pred: {pred}")
 
 print('_'*30)
+
