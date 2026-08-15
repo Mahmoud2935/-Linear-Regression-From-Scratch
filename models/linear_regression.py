@@ -35,7 +35,7 @@ class LinearRegression:
         return sum(cost) / len(y_true)
 
     # Update model parameters using Gradient Descent
-    def greadint_decent(self, x, y_true, y_pred):
+    def gradient_decent(self, x, y_true, y_pred):
 
         n_samples = x.shape[0]
 
@@ -93,4 +93,4 @@ class LinearRegression:
                     break
 
             # Update model parameters
-            self.greadint_decent( x,y,y_pred)
+            self.gradient_decent( x,y,y_pred)
