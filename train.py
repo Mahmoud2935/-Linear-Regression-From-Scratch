@@ -82,23 +82,13 @@ model = LinearRegression(
 
 model.fit(x_train_standrize,y_train)
 
-
 # Evaluate model on unseen test data
 
 predictions = model.predict(
     x_test_standrize
 )
 
-# save model
-
-model_data = {
-    "weights": model.weights.tolist(), # tolist because it is ndarray 
-    "bias": float(model.bias)
-}
-
-with open("save_model/model.json", "w") as file:
-    json.dump(model_data, file, indent=4)
-
+# save data for feature using
 metadata = {
     "feature_names": x_train.columns.tolist(), # feature name because we need order later
     "mean": mean.to_dict(),  # because it is pandas series 
@@ -108,22 +98,33 @@ metadata = {
 with open("save_model/metadata.json",'w')as file :
     json.dump(metadata, file, indent=4)
 
+# save model 
+model.save_model()
+
 # load model 
-loaded_model = LinearRegression()
 
-with open("save_model/model.json", "r") as file:
-    model_data = json.load(file)
+loaded_model = LinearRegression.load_model()
 
-loaded_model.weights = np.array(model_data["weights"])
-loaded_model.bias = model_data["bias"]
+pred_after = loaded_model.predict(
+    x_test_standrize
+)
 
-pred_after = loaded_model.predict(x_test_standrize)
-
+# Test model after save and load 
 
 print("_"*30)
 print(predictions[:5])
 print(pred_after[:5])
 print("_"*30)
+# train the model again to see if incremental Training work or not 
+loaded_model.epochs = 50
+print("Before:", loaded_model.weights[0])
+
+loaded_model.fit(
+    x_train_standrize,
+    y_train
+)
+
+print("After:", loaded_model.weights[0])
 # Save loss history for visualizations
 
 with open("results/losses.json","w") as file:

@@ -1,4 +1,5 @@
 import numpy as np
+import json
 
 
 class LinearRegression:
@@ -54,14 +55,43 @@ class LinearRegression:
             - self.learning_rate * db
         )
 
+    # add save model
+    def save_model(self):
+        model_data = {
+             "weights": self.weights.tolist(),   # tolist because it is ndarray 
+             "bias": float(self.bias)
+             }
+
+        with open("save_model/model.json", "w") as file:
+            json.dump(model_data, file, indent=4)
+
+    #  load weights and bias    
+    @classmethod
+    def load_model(cls):
+        with open("save_model/model.json") as file:
+            model_data =  json.load(file) 
+
+        model = cls()
+        model.weights = np.array(model_data["weights"])
+        model.bias = model_data["bias"]
+
+        return model
+
+
+
+    
     # Train the model using batch Gradient Descent
     def fit(self, x, y):
 
         # Initialize model parameters
         n_features = x.shape[1]
+        
+        # add continue training 
 
-        self.weights = np.zeros(n_features)
-        self.bias = 0
+        if self.weights is None:
+            self.weights = np.zeros(n_features)
+            self.bias = 0
+        
 
         for epoch in range(self.epochs):
 
