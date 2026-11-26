@@ -10,10 +10,12 @@ class LinearRegression:
         learning_rate=0.01,
         epochs=1000,
         tolerance=0.001
+        
     ):
         self.learning_rate = learning_rate
         self.epochs = epochs
         self.tolerance = tolerance
+        
 
         self.weights = None
         self.bias = None
@@ -59,7 +61,8 @@ class LinearRegression:
     def save_model(self):
         model_data = {
              "weights": self.weights.tolist(),   # tolist because it is ndarray 
-             "bias": float(self.bias)
+             "bias": float(self.bias),
+             
              }
 
         with open("save_model/model.json", "w") as file:
@@ -67,13 +70,14 @@ class LinearRegression:
 
     #  load weights and bias    
     @classmethod
-    def load_model(cls):
-        with open("save_model/model.json") as file:
-            model_data =  json.load(file) 
+    def load_model(cls, filepath="save_model/model.json"):
+        with open(filepath) as file:
+           model_data = json.load(file)
 
-        model = cls()
+        model = cls()  # cls to used in inheritance later caus cls makes you use the method in inherit class
         model.weights = np.array(model_data["weights"])
         model.bias = model_data["bias"]
+        
 
         return model
 
@@ -124,3 +128,4 @@ class LinearRegression:
 
             # Update model parameters
             self.gradient_decent( x,y,y_pred)
+           

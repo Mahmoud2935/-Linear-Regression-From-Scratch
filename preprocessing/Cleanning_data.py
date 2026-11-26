@@ -1,18 +1,25 @@
 import pandas as pd
 
 
-# Load raw housing dataset
-df = pd.read_excel("data/Excel_data_salary.xlsx")
+# ==================================================
+# 1. Load Raw Dataset
+# ==================================================
+
+df = pd.read_excel(
+    "data/Excel_data_salary.xlsx"
+)
 
 
-# Quick data understanding (used during exploration)
+# ==================================================
+# 2. Initial Exploration
+# ==================================================
+
+# Used during EDA phase
 
 # print(df.describe())
-# print('='*20)
 # print(df.info())
 
-
-# Explore relationships between important numerical features
+# Numerical relationships
 
 corr_matrix = df[
     [
@@ -28,50 +35,57 @@ corr_matrix = df[
 print(corr_matrix)
 
 
-# Remove identifier and non-useful columns
+# ==================================================
+# 3. Remove Non-Useful Columns
+# ==================================================
 
 df = df.drop(
-    columns=["PropertyID", "ListDate", "Agent"]
+    columns=[
+        "PropertyID",
+        "ListDate",
+        "Agent"
+    ]
 )
 
-# print(df.columns)
-# print(df.isnull().sum())
+
+# ==================================================
+# 4. Feature Review Decisions
+# ==================================================
+
+# Status was removed because it may
+# contain information related to
+# the sale outcome.
+
+df = df.drop(
+    "Status",
+    axis=1
+)
+
+# DaysOnMarket was removed because
+# it is not usually available at
+# prediction time.
+
+df = df.drop(
+    columns=[
+        "DaysOnMarket"
+    ]
+)
 
 
-# Explore categorical columns before encoding
+# ==================================================
+# 5. Preserve Dataset Before Encoding
+# ==================================================
 
-# print(df["PropertyType"].nunique())
-# print(df["City"].nunique())
-# print(df["Neighborhood"].nunique())
-# print(df["Status"].nunique())
+# Used for analysis and dashboard generation
 
-# train_df = df[
-#     df["SalePrice"].notna()
-# ]
-
-# print(
-#     train_df[
-#         [
-#             "PropertyType",
-#             "City",
-#             "Neighborhood",
-#             "Status"
-#         ]
-#     ].head()
-# )
+df_before_encoding = (
+    df.copy()
+)
 
 
-# Remove Status to avoid potential data leakage
-
-df = df.drop("Status", axis=1)
-
-
-# Keep a copy before encoding for analysis and visualizations
-
-df_before_encoding = df.copy()
-
-
-# Build a clean correlation matrix for the dashboard
+# ==================================================
+# 6. Generate Correlation Matrix
+# ==================================================
 
 important_columns = [
     "SalePrice",
@@ -83,16 +97,20 @@ important_columns = [
     "YearBuilt"
 ]
 
-corr = df_before_encoding[
-    important_columns
-].corr()
+corr = (
+    df_before_encoding[
+        important_columns
+    ].corr()
+)
 
 corr.to_json(
     "results/correlation_matrix.json"
 )
 
 
-# Convert categorical features into numerical features using One-Hot Encoding
+# ==================================================
+# 7. Encode Categorical Features
+# ==================================================
 
 df = pd.get_dummies(
     df,
@@ -105,9 +123,17 @@ df = pd.get_dummies(
 )
 
 
-# Save processed dataset for model training
+# ==================================================
+# 8. Save Processed Dataset
+# ==================================================
 
 df.to_csv(
     "data/data_cleaned_for_train.csv",
     index=False
 )
+
+# ===================================================
+#9. save data_cleaned_befor_Encoding
+#====================================================
+
+df_before_encoding.to_csv("data/data_cleaned_befor_Encoding.csv")
