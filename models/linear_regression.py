@@ -1,4 +1,5 @@
 import numpy as np
+import json
 
 
 class LinearRegression:
@@ -9,10 +10,12 @@ class LinearRegression:
         learning_rate=0.01,
         epochs=1000,
         tolerance=0.001
+        
     ):
         self.learning_rate = learning_rate
         self.epochs = epochs
         self.tolerance = tolerance
+        
 
         self.weights = None
         self.bias = None
@@ -35,7 +38,7 @@ class LinearRegression:
         return sum(cost) / len(y_true)
 
     # Update model parameters using Gradient Descent
-    def greadint_decent(self, x, y_true, y_pred):
+    def gradient_decent(self, x, y_true, y_pred):
 
         n_samples = x.shape[0]
 
@@ -54,14 +57,45 @@ class LinearRegression:
             - self.learning_rate * db
         )
 
+    # add save model
+    def save_model(self):
+        model_data = {
+             "weights": self.weights.tolist(),   # tolist because it is ndarray 
+             "bias": float(self.bias),
+             
+             }
+
+        with open("save_model/model.json", "w") as file:
+            json.dump(model_data, file, indent=4)
+
+    #  load weights and bias    
+    @classmethod
+    def load_model(cls, filepath="save_model/model.json"):
+        with open(filepath) as file:
+           model_data = json.load(file)
+
+        model = cls()  # cls to used in inheritance later caus cls makes you use the method in inherit class
+        model.weights = np.array(model_data["weights"])
+        model.bias = model_data["bias"]
+        
+
+        return model
+
+
+
+    
     # Train the model using batch Gradient Descent
     def fit(self, x, y):
 
         # Initialize model parameters
         n_features = x.shape[1]
+        
+        # add continue training 
 
-        self.weights = np.zeros(n_features)
-        self.bias = 0
+        if self.weights is None:
+            self.weights = np.zeros(n_features)
+            self.bias = 0
+        
 
         for epoch in range(self.epochs):
 
@@ -93,4 +127,5 @@ class LinearRegression:
                     break
 
             # Update model parameters
-            self.greadint_decent( x,y,y_pred)
+            self.gradient_decent( x,y,y_pred)
+           
