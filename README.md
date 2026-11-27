@@ -181,7 +181,7 @@ Current test set performance on labeled property records:
 
 | Metric | Value |
 | :--- | :--- |
-| **R² Score (Test)** | **`~95.46%`** |
+| **R² Score (Test)** | **`~95.27%`** |
 | **RMSE** | **`~254,506`** |
 | **MSE** | **`~64.77 Billion`** |
 

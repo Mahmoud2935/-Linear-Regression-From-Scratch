@@ -289,7 +289,7 @@ for true, pred in zip(
     )
 
 #==================================================
-#17. 
+#17. Missing Value Inference (Predict New Samples)
 #==================================================
 
 def predict_new_samples(new_samples, target_col_name="Target"):
@@ -311,6 +311,7 @@ def predict_new_samples(new_samples, target_col_name="Target"):
     return result_df
 
 predicted_df = predict_new_samples(predict_df,target_col_name= "SalePrice")
+
 
 # 3. عرض أول 10 صفوف عشان تتأكد إن القيمة الأصلية NaN والجديدة اتحسبت + تاخد Screenshot
 print(f"\n--- Imputed {len(predicted_df)} Missing Rows ---")
